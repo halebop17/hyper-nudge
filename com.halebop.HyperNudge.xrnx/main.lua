@@ -30,77 +30,103 @@ local function showNoteDelayColumns()
 end
 
 ------------------------------------------------------------------------
+-- Pattern Editor actions (shared by menu entries, keybindings, MIDI mappings)
+------------------------------------------------------------------------
+
+local function patternNudgeUpByOneStep()
+  if selectionIsNil() and effectColumnIsSelected() then return end
+  local usingEditCursor = selectionIsNil()
+  if usingEditCursor then selectEditCursorCell() end
+  local empty = populateMatrixForMovingUpByOneStep()
+  if empty then
+    if usingEditCursor then clearSelection() end
+    return
+  end
+  showNoteDelayColumns()
+  shrinkSelectionRangeWhenMovingUp()
+  local moved = moveColumnEntriesInSelectionUpByOneStep()
+  moveSelectionRangeUp(moved)
+  if usingEditCursor then
+    clearSelection()
+    if moved then moveEditCursorUp() end
+  end
+end
+
+local function patternNudgeUpByOneLine()
+  local usingEditCursor = selectionIsNil()
+  if usingEditCursor then selectEditCursorCell() end
+  local empty = populateMatrixForMovingUpByOneLine()
+  if empty then
+    if usingEditCursor then clearSelection() end
+    return
+  end
+  shrinkSelectionRangeWhenMovingUp()
+  local moved = moveColumnEntriesInSelectionUpByOneLine()
+  moveSelectionRangeUp(moved)
+  if usingEditCursor then
+    clearSelection()
+    if moved then moveEditCursorUp() end
+  end
+end
+
+local function patternNudgeDownByOneStep()
+  if selectionIsNil() and effectColumnIsSelected() then return end
+  local usingEditCursor = selectionIsNil()
+  if usingEditCursor then selectEditCursorCell() end
+  local empty = populateMatrixForMovingDownByOneStep()
+  if empty then
+    if usingEditCursor then clearSelection() end
+    return
+  end
+  showNoteDelayColumns()
+  shrinkSelectionRangeWhenMovingDown()
+  local moved = moveColumnEntriesInSelectionDownByOneStep()
+  moveSelectionRangeDown(moved)
+  if usingEditCursor then
+    clearSelection()
+    if moved then moveEditCursorDown() end
+  end
+end
+
+local function patternNudgeDownByOneLine()
+  local usingEditCursor = selectionIsNil()
+  if usingEditCursor then selectEditCursorCell() end
+  local empty = populateMatrixForMovingDownByOneLine()
+  if empty then
+    if usingEditCursor then clearSelection() end
+    return
+  end
+  shrinkSelectionRangeWhenMovingDown()
+  local moved = moveColumnEntriesInSelectionDownByOneLine()
+  moveSelectionRangeDown(moved)
+  if usingEditCursor then
+    clearSelection()
+    if moved then moveEditCursorDown() end
+  end
+end
+
+------------------------------------------------------------------------
 -- Menu entries
 ------------------------------------------------------------------------
 
 renoise.tool():add_menu_entry {
   name = "Main Menu:Tools:HyperNudge:Pattern Editor:Nudge Up by 1 step",
-  invoke = function()
-    if renoise.song().selection_in_pattern == nil and
-       renoise.song().selected_effect_column_index ~= 0 then return end
-    local usingEditCursor = renoise.song().selection_in_pattern == nil
-    if usingEditCursor then selectEditCursorCell() end
-    local empty = populateMatrixForMovingUpByOneStep()
-    if not empty then
-      showNoteDelayColumns()
-      shrinkSelectionRangeWhenMovingUp()
-      local moved = moveColumnEntriesInSelectionUpByOneStep()
-      moveSelectionRangeUp(moved)
-      if usingEditCursor and moved then moveEditCursorUp() end
-    end
-    if usingEditCursor then clearSelection() end
-  end
+  invoke = function() patternNudgeUpByOneStep() end
 }
 
 renoise.tool():add_menu_entry {
   name = "Main Menu:Tools:HyperNudge:Pattern Editor:Nudge Up by 1 line",
-  invoke = function()
-    local usingEditCursor = renoise.song().selection_in_pattern == nil
-    if usingEditCursor then selectEditCursorCell() end
-    local empty = populateMatrixForMovingUpByOneLine()
-    if not empty then
-      shrinkSelectionRangeWhenMovingUp()
-      local moved = moveColumnEntriesInSelectionUpByOneLine()
-      moveSelectionRangeUp(moved)
-      if usingEditCursor and moved then moveEditCursorUp() end
-    end
-    if usingEditCursor then clearSelection() end
-  end
+  invoke = function() patternNudgeUpByOneLine() end
 }
 
 renoise.tool():add_menu_entry {
   name = "Main Menu:Tools:HyperNudge:Pattern Editor:Nudge Down by 1 step",
-  invoke = function()
-    if renoise.song().selection_in_pattern == nil and
-       renoise.song().selected_effect_column_index ~= 0 then return end
-    local usingEditCursor = renoise.song().selection_in_pattern == nil
-    if usingEditCursor then selectEditCursorCell() end
-    local empty = populateMatrixForMovingDownByOneStep()
-    if not empty then
-      showNoteDelayColumns()
-      shrinkSelectionRangeWhenMovingDown()
-      local moved = moveColumnEntriesInSelectionDownByOneStep()
-      moveSelectionRangeDown(moved)
-      if usingEditCursor and moved then moveEditCursorDown() end
-    end
-    if usingEditCursor then clearSelection() end
-  end
+  invoke = function() patternNudgeDownByOneStep() end
 }
 
 renoise.tool():add_menu_entry {
   name = "Main Menu:Tools:HyperNudge:Pattern Editor:Nudge Down by 1 line",
-  invoke = function()
-    local usingEditCursor = renoise.song().selection_in_pattern == nil
-    if usingEditCursor then selectEditCursorCell() end
-    local empty = populateMatrixForMovingDownByOneLine()
-    if not empty then
-      shrinkSelectionRangeWhenMovingDown()
-      local moved = moveColumnEntriesInSelectionDownByOneLine()
-      moveSelectionRangeDown(moved)
-      if usingEditCursor and moved then moveEditCursorDown() end
-    end
-    if usingEditCursor then clearSelection() end
-  end
+  invoke = function() patternNudgeDownByOneLine() end
 }
 
 renoise.tool():add_menu_entry {
@@ -152,161 +178,27 @@ renoise.tool():add_menu_entry {
 }
 
 ------------------------------------------------------------------------
--- Pattern Editor keybindings (original, unchanged)
+-- Pattern Editor keybindings
 ------------------------------------------------------------------------
 
 renoise.tool():add_keybinding {
   name = "Pattern Editor:Tools:Nudge Up by 1 step",
-  invoke = function(repeated)
-    
-    local usingEditCursor = false
-    
-    if selectionIsNil() and effectColumnIsSelected() then
-      return
-    elseif selectionIsNil() then
-      usingEditCursor = true
-      selectEditCursorCell()
-    end
-    
-    local allEntriesInSelectionAreEmpty = populateMatrixForMovingUpByOneStep()
-    
-    if allEntriesInSelectionAreEmpty then
-    
-      if usingEditCursor then  
-        clearSelection()
-      end
-    
-      return
-    end
-    
-    showNoteDelayColumns()
-    shrinkSelectionRangeWhenMovingUp()     
-    local columnEntryMovedToNewLine = moveColumnEntriesInSelectionUpByOneStep()
-    moveSelectionRangeUp(columnEntryMovedToNewLine)
-
-    if usingEditCursor then
-      
-      clearSelection()
-      
-      if columnEntryMovedToNewLine then
-        moveEditCursorUp()
-      end
-    end
-  end
+  invoke = function(repeated) patternNudgeUpByOneStep() end
 }
 
 renoise.tool():add_keybinding {
   name = "Pattern Editor:Tools:Nudge Up by 1 line",
-  invoke = function(repeated)
- 
-    local usingEditCursor = false
- 
-    if selectionIsNil() then
-      usingEditCursor = true
-      selectEditCursorCell()
-    end
-
-    local allEntriesInSelectionAreEmpty = populateMatrixForMovingUpByOneLine()
-    
-    if allEntriesInSelectionAreEmpty then
-    
-      if usingEditCursor then  
-        clearSelection()
-      end
-    
-      return
-    end
-    
-    shrinkSelectionRangeWhenMovingUp()     
-    local columnEntryMovedToNewLine = moveColumnEntriesInSelectionUpByOneLine()
-    moveSelectionRangeUp(columnEntryMovedToNewLine)
-    
-    if usingEditCursor then
-      
-      clearSelection()
-      
-      if columnEntryMovedToNewLine then
-        moveEditCursorUp()
-      end
-    end 
-  end
+  invoke = function(repeated) patternNudgeUpByOneLine() end
 }
 
 renoise.tool():add_keybinding {
   name = "Pattern Editor:Tools:Nudge Down by 1 step",
-  invoke = function(repeated)
-
-    local usingEditCursor = false
-
-    if selectionIsNil() and effectColumnIsSelected() then
-      return
-    elseif selectionIsNil() then
-      usingEditCursor = true
-      selectEditCursorCell()
-    end
-    
-    local allEntriesInSelectionAreEmpty = populateMatrixForMovingDownByOneStep()
-    
-    if allEntriesInSelectionAreEmpty then
-    
-      if usingEditCursor then  
-        clearSelection()
-      end
-    
-      return
-    end
-    
-    showNoteDelayColumns()
-    shrinkSelectionRangeWhenMovingDown()
-    local columnEntryMovedToNewLine = moveColumnEntriesInSelectionDownByOneStep()
-    moveSelectionRangeDown(columnEntryMovedToNewLine)
-    
-    if usingEditCursor then
-      
-      clearSelection()
-      
-      if columnEntryMovedToNewLine then
-        moveEditCursorDown()
-      end
-    end
-  end
+  invoke = function(repeated) patternNudgeDownByOneStep() end
 }
 
 renoise.tool():add_keybinding {
   name = "Pattern Editor:Tools:Nudge Down by 1 line",
-  invoke = function(repeated)
-
-    local usingEditCursor = false
-
-    if selectionIsNil() then
-      usingEditCursor = true
-      selectEditCursorCell()
-    end
-    
-    local allEntriesInSelectionAreEmpty = populateMatrixForMovingDownByOneLine()
-
-    if allEntriesInSelectionAreEmpty then
-    
-      if usingEditCursor then  
-        clearSelection()
-      end
-    
-      return
-    end
-    
-    shrinkSelectionRangeWhenMovingDown()
-    local columnEntryMovedToNewLine = moveColumnEntriesInSelectionDownByOneLine()
-    moveSelectionRangeDown(columnEntryMovedToNewLine)
-    
-    if usingEditCursor then
-      
-      clearSelection()
-      
-      if columnEntryMovedToNewLine then
-        moveEditCursorDown()
-      end
-    end
-  end
+  invoke = function(repeated) patternNudgeDownByOneLine() end
 }
 
 ------------------------------------------------------------------------
@@ -376,19 +268,7 @@ renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Pattern Editor:Nudge Up by 1 step",
   invoke = function(message)
     if not midi_is_press(message) then return end
-    if renoise.song().selection_in_pattern == nil and
-       renoise.song().selected_effect_column_index ~= 0 then return end
-    if renoise.song().selection_in_pattern == nil then
-      selectEditCursorCell()
-    end
-    local empty = populateMatrixForMovingUpByOneStep()
-    if not empty then
-      showNoteDelayColumns()
-      shrinkSelectionRangeWhenMovingUp()
-      local moved = moveColumnEntriesInSelectionUpByOneStep()
-      moveSelectionRangeUp(moved)
-    end
-    clearSelection()
+    patternNudgeUpByOneStep()
   end
 }
 
@@ -396,16 +276,7 @@ renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Pattern Editor:Nudge Up by 1 line",
   invoke = function(message)
     if not midi_is_press(message) then return end
-    if renoise.song().selection_in_pattern == nil then
-      selectEditCursorCell()
-    end
-    local empty = populateMatrixForMovingUpByOneLine()
-    if not empty then
-      shrinkSelectionRangeWhenMovingUp()
-      local moved = moveColumnEntriesInSelectionUpByOneLine()
-      moveSelectionRangeUp(moved)
-    end
-    clearSelection()
+    patternNudgeUpByOneLine()
   end
 }
 
@@ -413,19 +284,7 @@ renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Pattern Editor:Nudge Down by 1 step",
   invoke = function(message)
     if not midi_is_press(message) then return end
-    if renoise.song().selection_in_pattern == nil and
-       renoise.song().selected_effect_column_index ~= 0 then return end
-    if renoise.song().selection_in_pattern == nil then
-      selectEditCursorCell()
-    end
-    local empty = populateMatrixForMovingDownByOneStep()
-    if not empty then
-      showNoteDelayColumns()
-      shrinkSelectionRangeWhenMovingDown()
-      local moved = moveColumnEntriesInSelectionDownByOneStep()
-      moveSelectionRangeDown(moved)
-    end
-    clearSelection()
+    patternNudgeDownByOneStep()
   end
 }
 
@@ -433,16 +292,7 @@ renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Pattern Editor:Nudge Down by 1 line",
   invoke = function(message)
     if not midi_is_press(message) then return end
-    if renoise.song().selection_in_pattern == nil then
-      selectEditCursorCell()
-    end
-    local empty = populateMatrixForMovingDownByOneLine()
-    if not empty then
-      shrinkSelectionRangeWhenMovingDown()
-      local moved = moveColumnEntriesInSelectionDownByOneLine()
-      moveSelectionRangeDown(moved)
-    end
-    clearSelection()
+    patternNudgeDownByOneLine()
   end
 }
 
