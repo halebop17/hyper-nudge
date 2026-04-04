@@ -121,11 +121,13 @@ Tools
 
 Bind any of these to a button or pad on a hardware MIDI controller.
 
+> **Note:** Pattern Editor and Phrase Editor mappings are independent. Assign `Pattern Editor:Nudge Down by 1 line` to your controller when working in the Pattern Editor, and `Phrase Editor:Nudge Down by 1 line` when working in the Phrase Editor. You can assign **both** to the same physical button — only the one that matches your current context will do anything.
+
 ---
 
 ## Installation
 
-1. Copy `com.halebp.HyperNudge.xrnx` into your Renoise Tools folder:
+1. Copy `com.halebop.HyperNudge.xrnx` into your Renoise Tools folder:
    - **macOS**: `~/Library/Preferences/Renoise/V3.x.x/Scripts/Tools/`
    - **Windows**: `%APPDATA%\Renoise\V3.x.x\Scripts\Tools\`
    - **Linux**: `~/.renoise/V3.x.x/Scripts/Tools/`
