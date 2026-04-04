@@ -365,10 +365,17 @@ renoise.tool():add_keybinding {
 -- MIDI mappings
 ------------------------------------------------------------------------
 
+-- Accepts trigger (CC button), note-on (abs value > 0), or switch-on
+local function midi_is_press(message)
+  return message:is_trigger() or
+         (message:is_abs_value() and message.int_value > 0) or
+         (message:is_switch() and message.boolean_value)
+end
+
 renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Pattern Editor:Nudge Up by 1 step",
   invoke = function(message)
-    if not message:is_trigger() then return end
+    if not midi_is_press(message) then return end
     if renoise.song().selection_in_pattern == nil and
        renoise.song().selected_effect_column_index ~= 0 then return end
     if renoise.song().selection_in_pattern == nil then
@@ -388,7 +395,7 @@ renoise.tool():add_midi_mapping {
 renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Pattern Editor:Nudge Up by 1 line",
   invoke = function(message)
-    if not message:is_trigger() then return end
+    if not midi_is_press(message) then return end
     if renoise.song().selection_in_pattern == nil then
       selectEditCursorCell()
     end
@@ -405,7 +412,7 @@ renoise.tool():add_midi_mapping {
 renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Pattern Editor:Nudge Down by 1 step",
   invoke = function(message)
-    if not message:is_trigger() then return end
+    if not midi_is_press(message) then return end
     if renoise.song().selection_in_pattern == nil and
        renoise.song().selected_effect_column_index ~= 0 then return end
     if renoise.song().selection_in_pattern == nil then
@@ -425,7 +432,7 @@ renoise.tool():add_midi_mapping {
 renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Pattern Editor:Nudge Down by 1 line",
   invoke = function(message)
-    if not message:is_trigger() then return end
+    if not midi_is_press(message) then return end
     if renoise.song().selection_in_pattern == nil then
       selectEditCursorCell()
     end
@@ -442,7 +449,7 @@ renoise.tool():add_midi_mapping {
 renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Phrase Editor:Nudge Up by 1 step",
   invoke = function(message)
-    if not message:is_trigger() then return end
+    if not midi_is_press(message) then return end
     if renoise.song().selected_phrase == nil then return end
     phraseNudgeUpByOneStep()
   end
@@ -451,7 +458,7 @@ renoise.tool():add_midi_mapping {
 renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Phrase Editor:Nudge Up by 1 line",
   invoke = function(message)
-    if not message:is_trigger() then return end
+    if not midi_is_press(message) then return end
     if renoise.song().selected_phrase == nil then return end
     phraseNudgeUpByOneLine()
   end
@@ -460,7 +467,7 @@ renoise.tool():add_midi_mapping {
 renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Phrase Editor:Nudge Down by 1 step",
   invoke = function(message)
-    if not message:is_trigger() then return end
+    if not midi_is_press(message) then return end
     if renoise.song().selected_phrase == nil then return end
     phraseNudgeDownByOneStep()
   end
@@ -469,7 +476,7 @@ renoise.tool():add_midi_mapping {
 renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Phrase Editor:Nudge Down by 1 line",
   invoke = function(message)
-    if not message:is_trigger() then return end
+    if not midi_is_press(message) then return end
     if renoise.song().selected_phrase == nil then return end
     phraseNudgeDownByOneLine()
   end
@@ -478,7 +485,7 @@ renoise.tool():add_midi_mapping {
 renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Phrase Editor:Nudge All Columns Up by 1 line",
   invoke = function(message)
-    if not message:is_trigger() then return end
+    if not midi_is_press(message) then return end
     if renoise.song().selected_phrase == nil then return end
     phraseNudgeAllColumnsUpByOneLine()
   end
@@ -487,7 +494,7 @@ renoise.tool():add_midi_mapping {
 renoise.tool():add_midi_mapping {
   name = "Tools:HyperNudge:Phrase Editor:Nudge All Columns Down by 1 line",
   invoke = function(message)
-    if not message:is_trigger() then return end
+    if not midi_is_press(message) then return end
     if renoise.song().selected_phrase == nil then return end
     phraseNudgeAllColumnsDownByOneLine()
   end
