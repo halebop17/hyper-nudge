@@ -9,5 +9,5 @@
   <Category>Pattern Editor, Phrase Editor</Category>
   <Name>HyperNudge</Name>
   <Description>Moves column entries (notes and effects) up and down in both the Pattern Editor and the Phrase Editor. Notes can be moved by 1 step (delay value) or by 1 line; effects by 1 line. Works with cursor position or with a selection. Phrase Editor features: wrap-around at phrase boundaries, step nudge with selection, and nudge all columns simultaneously. All actions are available as keybindings and MIDI mappings.</Description>
-
+<Homepage>https://github.com/halebop17/hyper-nudge</Homepage>
 </RenoiseScriptingTool>
