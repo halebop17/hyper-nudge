@@ -6,7 +6,7 @@
   <Version>1.0</Version>
   <Id>com.halebop.HyperNudge</Id>
   <Author>halebop</Author>
-  <Category>Pattern Editor, Phrase Editor</Category>
+  <Category>Pattern, Phrase</Category>
   <Name>HyperNudge</Name>
   <Description>This tool simplifies moving column entries (notes and effects) up and down in the Pattern &amp; Phrase Editor by 1 step or by 1 line</Description>
 <Homepage>https://github.com/halebop17/hyper-nudge</Homepage>
