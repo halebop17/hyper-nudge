@@ -43,12 +43,10 @@ Moves notes and effects up or down by one full line.
 
 Assign these in **Preferences → Keys → Pattern Editor → Tools**.
 
-| Action | Scope |
-|---|---|
-| Nudge Up by 1 step | Pattern Editor |
-| Nudge Up by 1 line | Pattern Editor |
-| Nudge Down by 1 step | Pattern Editor |
-| Nudge Down by 1 line | Pattern Editor |
+- Nudge Up by 1 step
+- Nudge Up by 1 line
+- Nudge Down by 1 step
+- Nudge Down by 1 line
 
 ---
 
@@ -87,14 +85,12 @@ Moves **every** note column and effect column on the current line (or across the
 
 Assign these in **Preferences → Keys → Phrase Editor → Tools**. You can use the **same key combinations** as the Pattern Editor bindings — Renoise fires the appropriate one based on which editor has focus.
 
-| Action | Scope |
-|---|---|
-| Nudge Up by 1 step | Phrase Editor |
-| Nudge Up by 1 line | Phrase Editor |
-| Nudge Down by 1 step | Phrase Editor |
-| Nudge Down by 1 line | Phrase Editor |
-| Nudge All Columns Up by 1 line | Phrase Editor |
-| Nudge All Columns Down by 1 line | Phrase Editor |
+- Nudge Up by 1 step
+- Nudge Up by 1 line
+- Nudge Down by 1 step
+- Nudge Down by 1 line
+- Nudge All Columns Up by 1 line
+- Nudge All Columns Down by 1 line
 
 ---
 

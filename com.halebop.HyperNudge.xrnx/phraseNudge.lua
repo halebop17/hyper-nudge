@@ -226,6 +226,8 @@ local function nudgeAllColumnsByOneLine(direction)
     }
   else
     song().selection_in_phrase = nil
+    -- Move cursor to follow the nudged content
+    song().selected_phrase_line_index = wrapLine(startLine + direction, phrase.number_of_lines)
   end
 end
 
